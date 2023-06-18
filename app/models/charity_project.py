@@ -11,15 +11,10 @@
 # close_date — дата закрытия проекта, DateTime, проставляется автоматически в момент набора нужной суммы.
 from sqlalchemy import Column, String, Text, Integer, Boolean, DateTime
 
-from app.core.db import Base
+from app.core.db import BaseDonationCharityProject
 
 
-class CharityProject(Base):
+class CharityProject(BaseDonationCharityProject):
     """Модель благотворительных проектов фонда."""
     name = Column(String(100), unique=True, nullable=False)
     description = Column(Text, nullable=False)
-    full_amount = Column(Integer)
-    invested_amount = Column(Integer, default=0)
-    fully_invested = Column(Boolean)
-    create_date = Column(DateTime)
-    close_date = Column(DateTime)

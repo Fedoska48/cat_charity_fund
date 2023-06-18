@@ -10,17 +10,14 @@
 # create_date — дата пожертвования; тип DateTime; добавляется автоматически в момент поступления пожертвования;
 # close_date — дата, когда вся сумма пожертвования была распределена по проектам; тип DateTime; добавляется автоматически в момент выполнения условия.
 
-from sqlalchemy import Column, String, Text, Integer, Boolean, DateTime
+from sqlalchemy import Column, String, Text, Integer, Boolean, DateTime, \
+    ForeignKey
 
-from app.core.db import Base
+from app.core.db import BaseDonationCharityProject
 
 
-class Donation(Base):
+class Donation(BaseDonationCharityProject):
     """Модель пожертвований в фонд."""
-    user_id
-    comment
-    full_amount
-    invested_amount
-    fully_invested
-    create_date
-    close_date
+    user_id = Column(Integer,
+                     ForeignKey('user.id', name='fk_donation_user_id_user'))
+    comment = Column(Text)
