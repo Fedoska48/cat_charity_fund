@@ -9,3 +9,17 @@
 # fully_invested — булево значение, указывающее на то, собрана ли нужная сумма для проекта (закрыт ли проект); значение по умолчанию — False;
 # create_date — дата создания проекта, тип DateTime, должно добавляться автоматически в момент создания проекта.
 # close_date — дата закрытия проекта, DateTime, проставляется автоматически в момент набора нужной суммы.
+from sqlalchemy import Column, String, Text, Integer, Boolean, DateTime
+
+from app.core.db import Base
+
+
+class CharityProject(Base):
+    """Модель благотворительных проектов."""
+    name = Column(String(100), unique=True, nullable=False)
+    description = Column(Text())
+    full_amount = Column(Integer())
+    invested_amount = Column(Integer(), default=0)
+    fully_invested = Column(Boolean())
+    create_date = Column(DateTime())
+    close_date = Column(DateTime())
