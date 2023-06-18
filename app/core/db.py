@@ -18,7 +18,7 @@ class PreBase:
 
 
 # создаем базовый класс для моделей, с указанием PreBase
-Base = declarative_base()
+Base = declarative_base(cls=PreBase)
 
 # асинхронный движок
 engine = create_async_engine(settings.database_url)
