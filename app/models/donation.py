@@ -9,3 +9,18 @@
 # fully_invested — булево значение, указывающее на то, все ли деньги из пожертвования были переведены в тот или иной проект; по умолчанию равно False;
 # create_date — дата пожертвования; тип DateTime; добавляется автоматически в момент поступления пожертвования;
 # close_date — дата, когда вся сумма пожертвования была распределена по проектам; тип DateTime; добавляется автоматически в момент выполнения условия.
+
+from sqlalchemy import Column, String, Text, Integer, Boolean, DateTime
+
+from app.core.db import Base
+
+
+class Donation(Base):
+    """Модель пожертвований в фонд."""
+    user_id
+    comment
+    full_amount
+    invested_amount
+    fully_invested
+    create_date
+    close_date
