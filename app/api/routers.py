@@ -1,9 +1,8 @@
 # делаем единую точку входа роутеров
 from fastapi import APIRouter
 
-from app.api.endpoints import (
-    charity_project_router, donation_router, user_router
-)
+from app.api.endpoints import charity_project_router, \
+    donation_router  # user_router
 
 main_router = APIRouter()
 main_router.include_router(
@@ -16,4 +15,4 @@ main_router.include_router(
     prefix='/donation',
     tags=['Donations']
 )
-main_router.include_router(user_router)
+# main_router.include_router(user_router)
