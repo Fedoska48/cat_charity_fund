@@ -21,6 +21,7 @@ router = APIRouter()
 async def get_all_charity_projects(
         session: AsyncSession = Depends(get_async_session)
 ):
+    """Получает список всех проектов."""
     all_charity_projects = await charity_project_crud.get_multi(session)
     return all_charity_projects
 
@@ -34,6 +35,8 @@ async def create_new_charity_project(
         charity_project: CharityProjectCreate,
         session: AsyncSession = Depends(get_async_session)
 ):
+    """Только для суперюзеров. Создает благотворительный проект."""
+    # @TODO: only superuser
     # @TODO check_name_duplicate(obj, session)
     new_charity_project = await charity_project_crud.create(
         charity_project,
@@ -52,8 +55,11 @@ async def remove_charity_project(
         session: AsyncSession = Depends(get_async_session)
 ):
     """
-    Для суперюзера. Удаление проекта возможно если не были внесены средства.
+    Только для суперюзеров.
+    Удаляет проект. Нельзя удалить проект,
+    в который уже были инвестированы средства, его можно только закрыть.
     """
+    # @TODO: only superuser
     # @TODO check_project_exists(project_id, session)
 
     charity_project = charity_project_crud.remove(project_id, session)
@@ -71,10 +77,11 @@ async def update_charity_project(
         session: AsyncSession = Depends(get_async_session)
 ):
     """
-    Для суперюзера.
-    Может менять название и описание, но сумма должна быть не менее
-    уже собранной.
+    Только для суперюзеров.
+    Закрытый проект нельзя редактировать,
+    также нельзя установить требуемую сумму меньше уже вложенной.
     """
+    # @TODO: only superuser
     # @TODO new_full_amount > full_amount validation
     # @TODO check_exists
     # @TODO if obj_in.name: check_name_duplicate
