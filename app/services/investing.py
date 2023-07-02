@@ -24,6 +24,7 @@ async def get_not_invested_objects(
     """Получить объекты, которые еще не полностью проинвестированы."""
     ...
 
+
 async def close_fully_invested_object(
         obj_in: Union[CharityProject, Donation],
 ) -> None:
