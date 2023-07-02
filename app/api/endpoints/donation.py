@@ -13,16 +13,17 @@ from app.schemas.donation import DonationFullDB, DonationShortDB, \
 router = APIRouter()
 
 
-# @TODO get_all_donations
-
 @router.get(
     '/',
     response_model=List[DonationFullDB],
     response_model_exclude_none=True
 )
-async def get_all_charity_projects(
+async def get_all_donations(
         session: AsyncSession = Depends(get_async_session)
 ):
+    """Только для суперюзеров. Получить список всех пожертвований.
+    """
+    # @TODO: only superuser
     all_donations = await donation_crud.get_multi(session)
     return all_donations
 
@@ -36,7 +37,9 @@ async def create_donation(
         obj_in: DonationCreate,
         session: AsyncSession = Depends(get_async_session)
 ):
-    #  @TODO: some validations before create
+    """Для пользователей. Сделать пожертвование."""
+    # @TODO: only user
+    # @TODO: some validations before create
     created_donation = await donation_crud.create(obj_in, session)
     return created_donation
 
@@ -50,5 +53,6 @@ async def get_user_donations(
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
+    """Получить список моих пожертвований."""
     my_donations = await donation_crud.get_by_user(user, session)
     return my_donations
