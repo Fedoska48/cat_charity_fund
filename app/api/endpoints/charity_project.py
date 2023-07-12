@@ -3,8 +3,11 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.validators import check_project_exists, check_name_duplicate
 from app.core.db import get_async_session
+from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
+from app.models import User
 from app.schemas.charity_project import CharityProjectDB, CharityProjectCreate, \
     CharityProjectUpdate
 
@@ -21,7 +24,9 @@ router = APIRouter()
 async def get_all_charity_projects(
         session: AsyncSession = Depends(get_async_session)
 ):
-    """Получает список всех проектов."""
+    """
+    Доступно для всех. Получает список всех проектов.
+    """
     all_charity_projects = await charity_project_crud.get_multi(session)
     return all_charity_projects
 
@@ -29,14 +34,14 @@ async def get_all_charity_projects(
 @router.post(
     '/',
     response_model=List[CharityProjectDB],
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
+    dependencies=[Depends(current_superuser)]
 )
 async def create_new_charity_project(
         charity_project: CharityProjectCreate,
         session: AsyncSession = Depends(get_async_session)
 ):
     """Только для суперюзеров. Создает благотворительный проект."""
-    # @TODO: only superuser
     # @TODO check_name_duplicate(obj, session)
     new_charity_project = await charity_project_crud.create(
         charity_project,
@@ -48,7 +53,8 @@ async def create_new_charity_project(
 @router.delete(
     '/{project_id}',
     response_model=CharityProjectDB,
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
+    dependencies=[Depends(current_superuser)]
 )
 async def remove_charity_project(
         project_id: int,
@@ -59,9 +65,10 @@ async def remove_charity_project(
     Удаляет проект. Нельзя удалить проект,
     в который уже были инвестированы средства, его можно только закрыть.
     """
-    # @TODO: only superuser
-    # @TODO check_project_exists(project_id, session)
-
+    # @TODO: check_project_exists(project_id, session)
+    await check_project_exists(project_id, session)
+    # @TODO: check_invested_status(project_id, session)
+    # @TODO: close if invested else delete
     charity_project = charity_project_crud.remove(project_id, session)
     return charity_project
 
@@ -69,7 +76,8 @@ async def remove_charity_project(
 @router.patch(
     '/{project_id}',
     response_model=CharityProjectDB,
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
+    dependencies=[Depends(current_superuser)]
 )
 async def update_charity_project(
         project_id: int,
@@ -81,10 +89,11 @@ async def update_charity_project(
     Закрытый проект нельзя редактировать,
     также нельзя установить требуемую сумму меньше уже вложенной.
     """
+    await check_project_exists(project_id, session)
     # @TODO: only superuser
-    # @TODO new_full_amount > full_amount validation
-    # @TODO check_exists
-    # @TODO if obj_in.name: check_name_duplicate
+    # @TODO new_full_amount > invested_amount validation
+    if obj_in.name:
+        await check_name_duplicate(obj_in.name, session)
     charity_project = charity_project_crud.update(
         project_id,
         obj_in,
