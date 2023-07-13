@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.validators import check_project_exists, check_name_duplicate, \
-    check_project_is_closed
+    check_project_is_closed, check_project_already_got_donation
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
@@ -102,9 +102,9 @@ async def remove_charity_project(
     Удаляет проект. Нельзя удалить проект,
     в который уже были инвестированы средства, его можно только закрыть.
     """
-    # @TODO: check_project_exists(project_id, session)
     await check_project_exists(project_id, session)
-    # @TODO: check_project_already_got_donation(project_id, session)
-    #  >>> close if invested else delete
+    await check_project_already_got_donation(
+        project_id, session
+    )
     charity_project = charity_project_crud.remove(project_id, session)
     return charity_project

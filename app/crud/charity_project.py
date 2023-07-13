@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select
+from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDBase
@@ -38,8 +38,21 @@ class CRUDCharityProject(CRUDBase):
                 CharityProject.id == project_id
             )
         )
-        db_project_status = db_project_status.scalars().first()
-        return db_project_status
+        return db_project_status.scalars().first()
+
+    @staticmethod
+    async def get_invested_amount_by_id(
+            project_id: int,
+            session: AsyncSession
+    ):
+        invested_amount = await session.execute(
+            select(
+                CharityProject.invested_amount
+            ).where(
+                CharityProject.id == project_id
+            )
+        )
+        return invested_amount.scalars().first()
 
 
 charity_project_crud = CRUDCharityProject(CharityProject)
