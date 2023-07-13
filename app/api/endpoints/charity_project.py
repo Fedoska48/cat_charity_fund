@@ -70,7 +70,7 @@ async def remove_charity_project(
     """
     # @TODO: check_project_exists(project_id, session)
     await check_project_exists(project_id, session)
-    # @TODO: check_invested_status(project_id, session)
+    # @TODO: check_project_already_got_donation(project_id, session)
     #  >>> close if invested else delete
     charity_project = charity_project_crud.remove(project_id, session)
     return charity_project
@@ -93,9 +93,7 @@ async def update_charity_project(
     также нельзя установить требуемую сумму меньше уже вложенной.
     """
     await check_project_exists(project_id, session)
-    # @TODO: only superuser
-    # @TODO: check_project_is_open(project_id, session)
-
+    # @TODO: check_project_is_closed(project_id, session)
     if obj_in.name:
         await check_name_duplicate(obj_in.name, session)
     # @TODO new_full_amount > invested_amount validation

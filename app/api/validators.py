@@ -37,7 +37,16 @@ async def check_name_duplicate(
 
 
 # TODO: func
-async def check_new_full_amount_bigger_than_invested_amount():
+async def check_new_full_amount_bigger_than_invested_amount(
+    project_id, new_full_amount, session
+):
+    """Проверка того, что новая финальная сумма не ниже уже инвестированной."""
+    ...
+
+
+# TODO: func
+async def check_project_already_got_donation(project_id, session):
+    """Проверка того, что в проект хотя бы что-то инвестировано."""
     ...
 
 # @TODO: error messages for constants
