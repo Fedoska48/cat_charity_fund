@@ -3,7 +3,8 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.validators import check_project_exists, check_name_duplicate
+from app.api.validators import check_project_exists, check_name_duplicate, \
+    check_project_is_closed
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
@@ -70,7 +71,7 @@ async def update_charity_project(
     также нельзя установить требуемую сумму меньше уже вложенной.
     """
     await check_project_exists(project_id, session)
-    # @TODO: check_project_is_closed(project_id, session)
+    await check_project_is_closed(project_id, session)
     if obj_in.name:
         await check_name_duplicate(obj_in.name, session)
     # @TODO new_full_amount > invested_amount validation

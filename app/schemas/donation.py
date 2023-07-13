@@ -28,7 +28,7 @@ class DonationShortDB(DonationBase):
 
 
 class DonationFullDB(DonationShortDB):
-    user_id: str
+    user_id: int
     invested_amount: int
     fully_invested: bool
     close_date: Optional[datetime]

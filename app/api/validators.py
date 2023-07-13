@@ -49,4 +49,21 @@ async def check_project_already_got_donation(project_id, session):
     """Проверка того, что в проект хотя бы что-то инвестировано."""
     ...
 
+
+# TODO: func
+async def check_project_is_closed(
+        project_id: int,
+        session: AsyncSession
+):
+    """Проверка закрыт ли проект."""
+    project_status = await charity_project_crud.get_project_status_by_id(
+        project_id, session
+    )
+    if project_status:
+        raise HTTPException(
+            status_code=400,
+            detail='Закрытый проект нельзя редактировать!'
+        )
+    return project_status
+
 # @TODO: error messages for constants
