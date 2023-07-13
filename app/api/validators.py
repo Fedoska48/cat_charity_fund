@@ -30,8 +30,8 @@ async def check_name_duplicate(
     )
     if project_id:
         raise HTTPException(
-            status_code=422,
-            detail='Переговорка с таким именем уже существует!'
+            status_code=400,
+            detail='Проект с таким именем уже существует!'
         )
     return project_id
 

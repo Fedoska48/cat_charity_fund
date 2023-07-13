@@ -53,29 +53,6 @@ async def create_new_charity_project(
     return new_charity_project
 
 
-@router.delete(
-    '/{project_id}',
-    response_model=CharityProjectDB,
-    response_model_exclude_none=True,
-    dependencies=[Depends(current_superuser)]
-)
-async def remove_charity_project(
-        project_id: int,
-        session: AsyncSession = Depends(get_async_session)
-):
-    """
-    Только для суперюзеров.
-    Удаляет проект. Нельзя удалить проект,
-    в который уже были инвестированы средства, его можно только закрыть.
-    """
-    # @TODO: check_project_exists(project_id, session)
-    await check_project_exists(project_id, session)
-    # @TODO: check_project_already_got_donation(project_id, session)
-    #  >>> close if invested else delete
-    charity_project = charity_project_crud.remove(project_id, session)
-    return charity_project
-
-
 @router.patch(
     '/{project_id}',
     response_model=CharityProjectDB,
@@ -106,4 +83,27 @@ async def update_charity_project(
         obj_in,
         session
     )
+    return charity_project
+
+
+@router.delete(
+    '/{project_id}',
+    response_model=CharityProjectDB,
+    response_model_exclude_none=True,
+    dependencies=[Depends(current_superuser)]
+)
+async def remove_charity_project(
+        project_id: int,
+        session: AsyncSession = Depends(get_async_session)
+):
+    """
+    Только для суперюзеров.
+    Удаляет проект. Нельзя удалить проект,
+    в который уже были инвестированы средства, его можно только закрыть.
+    """
+    # @TODO: check_project_exists(project_id, session)
+    await check_project_exists(project_id, session)
+    # @TODO: check_project_already_got_donation(project_id, session)
+    #  >>> close if invested else delete
+    charity_project = charity_project_crud.remove(project_id, session)
     return charity_project
