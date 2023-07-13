@@ -10,6 +10,7 @@ from app.crud.charity_project import charity_project_crud
 from app.models import User
 from app.schemas.charity_project import CharityProjectDB, CharityProjectCreate, \
     CharityProjectUpdate
+from app.services.investing import investing
 
 router = APIRouter()
 
@@ -42,11 +43,13 @@ async def create_new_charity_project(
         session: AsyncSession = Depends(get_async_session)
 ):
     """Только для суперюзеров. Создает благотворительный проект."""
-    # @TODO check_name_duplicate(obj, session)
+    await check_name_duplicate(charity_project.name, session)
     new_charity_project = await charity_project_crud.create(
         charity_project,
         session
     )
+    await investing(new_charity_project, session)
+    await session.refresh(new_charity_project)
     return new_charity_project
 
 
@@ -68,7 +71,7 @@ async def remove_charity_project(
     # @TODO: check_project_exists(project_id, session)
     await check_project_exists(project_id, session)
     # @TODO: check_invested_status(project_id, session)
-    # @TODO: close if invested else delete
+    #  >>> close if invested else delete
     charity_project = charity_project_crud.remove(project_id, session)
     return charity_project
 
@@ -91,9 +94,15 @@ async def update_charity_project(
     """
     await check_project_exists(project_id, session)
     # @TODO: only superuser
-    # @TODO new_full_amount > invested_amount validation
+    # @TODO: check_project_is_open(project_id, session)
+
     if obj_in.name:
         await check_name_duplicate(obj_in.name, session)
+    # @TODO new_full_amount > invested_amount validation
+    # if obj_in.full_amount:
+    #   await check_new_full_amount_bigger_than_invested_amount(
+    #   project_id, obj_in.full_amount, session
+    #   )
     charity_project = charity_project_crud.update(
         project_id,
         obj_in,

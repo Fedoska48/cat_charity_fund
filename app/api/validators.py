@@ -23,7 +23,7 @@ async def check_project_exists(
 async def check_name_duplicate(
         project_name: str,
         session: AsyncSession
-):
+) -> None:
     """Проверить название проекта на уникальность."""
     project_id = await charity_project_crud.get_project_id_by_name(
         project_name, session
@@ -36,6 +36,8 @@ async def check_name_duplicate(
     return project_id
 
 
+# TODO: func
 async def check_new_full_amount_bigger_than_invested_amount():
-    # TODO: must do
     ...
+
+# @TODO: error messages for constants
