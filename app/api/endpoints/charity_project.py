@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.validators import check_project_exists, check_name_duplicate, \
-    check_project_is_closed, check_project_already_got_donation
+    check_project_is_closed, check_project_already_got_donation, \
+    check_new_full_amount_bigger_than_invested_amount
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
@@ -75,10 +76,10 @@ async def update_charity_project(
     if obj_in.name:
         await check_name_duplicate(obj_in.name, session)
     # @TODO new_full_amount > invested_amount validation
-    # if obj_in.full_amount:
-    #   await check_new_full_amount_bigger_than_invested_amount(
-    #   project_id, obj_in.full_amount, session
-    #   )
+    if obj_in.full_amount:
+        await check_new_full_amount_bigger_than_invested_amount(
+            project_id, obj_in.full_amount, session
+        )
     charity_project = charity_project_crud.update(
         project_id,
         obj_in,

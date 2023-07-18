@@ -38,10 +38,20 @@ async def check_name_duplicate(
 
 # TODO: func
 async def check_new_full_amount_bigger_than_invested_amount(
-        project_id, new_full_amount, session
+        project_id: int,
+        new_full_amount: int,
+        session: AsyncSession
 ):
     """Проверка того, что новая финальная сумма не ниже уже инвестированной."""
-    ...
+    invested_amount = await charity_project_crud.get_invested_amount_by_id(
+        project_id, session
+    )
+    if invested_amount > new_full_amount:
+        raise HTTPException(
+            status_code=400,
+            detail="Новая сумма меньше, чем уже проинвестировано в проект!"
+        )
+    return invested_amount
 
 
 # TODO: func
