@@ -46,7 +46,6 @@ class CRUDBase:
         new_obj_data = obj_in.dict()
         if user is not None:
             new_obj_data['user_id'] = user.id
-
         db_obj = self.model(**new_obj_data)
         session.add(db_obj)
         await session.commit()

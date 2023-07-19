@@ -103,9 +103,9 @@ async def remove_charity_project(
     Удаляет проект. Нельзя удалить проект,
     в который уже были инвестированы средства, его можно только закрыть.
     """
-    await check_project_exists(project_id, session)
+    charity_project = await check_project_exists(project_id, session)
     await check_project_already_got_donation(
         project_id, session
     )
-    charity_project = charity_project_crud.remove(project_id, session)
+    charity_project = charity_project_crud.remove(charity_project, session)
     return charity_project

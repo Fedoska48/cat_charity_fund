@@ -20,8 +20,7 @@ async def investing(
         CharityProject if isinstance(obj_in, Donation) else Donation
     )
     not_invested_objects = await get_not_invested_objects(
-        model_for_invest,
-        session
+        model_for_invest, session
     )
     if not_invested_objects:
         available = obj_in.fully_invested
@@ -56,7 +55,7 @@ async def get_not_invested_objects(
         select(
             obj_in
         ).where(
-            obj_in.fully_invested == False  # noqa
+            obj_in.fully_invested == False
         ).order_by(
             obj_in.create_date
         )

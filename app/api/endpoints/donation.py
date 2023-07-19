@@ -43,7 +43,6 @@ async def create_donation(
     """
     Для пользователей. Сделать пожертвование.
     """
-    # @TODO: some validations before create
     created_donation = await donation_crud.create(obj_in, session, user)
     await investing(created_donation, session)
     await session.refresh(created_donation)
