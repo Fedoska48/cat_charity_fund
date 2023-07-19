@@ -36,7 +36,7 @@ async def get_all_charity_projects(
 
 @router.post(
     '/',
-    response_model=List[CharityProjectDB],
+    response_model=CharityProjectDB,
     response_model_exclude_none=True,
     dependencies=[Depends(current_superuser)]
 )

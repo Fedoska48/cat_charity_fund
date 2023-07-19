@@ -1,7 +1,7 @@
 from datetime import datetime
-from select import select
 from typing import Union, List
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import CharityProject, Donation
@@ -52,9 +52,7 @@ async def get_not_invested_objects(
 ) -> List[Union[CharityProject, Donation]]:
     """Получить объекты, которые еще не полностью проинвестированы."""
     not_invested_objects = await session.execute(
-        select(
-            obj_in
-        ).where(
+        select(obj_in).where(
             obj_in.fully_invested == False
         ).order_by(
             obj_in.create_date
