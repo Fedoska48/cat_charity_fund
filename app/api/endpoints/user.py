@@ -1,4 +1,3 @@
-# app/api/endpoints/user.py
 from fastapi import APIRouter, HTTPException
 
 from app.core.user import auth_backend, fastapi_users
@@ -7,8 +6,6 @@ from app.schemas.user import UserCreate, UserRead, UserUpdate
 router = APIRouter()
 
 router.include_router(
-    # В роутер аутентификации
-    # передается объект бэкенда аутентификации.
     fastapi_users.get_auth_router(auth_backend),
     prefix='/auth/jwt',
     tags=['auth'],
@@ -25,18 +22,14 @@ router.include_router(
 )
 
 
-# переопределяем стандратный эндпойнт, чтобы запретить удаление юзеров ВСЕМ
-# чтобы была целостность данных. Деактивация юзера - параметр is_active.
 @router.delete(
     '/user/{id}',
     tags=['users'],
-    # параметр указывает, что метод устарел
     deprecated=True
 )
 def delete_user(id: str):
     """Не используйте удаление, деактивируйте пользователей."""
     raise HTTPException(
-        # 405 - метод не разрешен
         status_code=405,
         detail="Удаление пользователей запрещено!"
     )

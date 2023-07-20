@@ -13,7 +13,7 @@ class CRUDDonation(CRUDBase):
             user: User,
             session: AsyncSession
     ):
-        """Список донатов по пользователю."""
+        """Получить список донатов по пользователю."""
         donations = await session.execute(
             select(Donation).where(Donation.user_id == user.id)
         )

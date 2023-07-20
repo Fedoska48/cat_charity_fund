@@ -8,8 +8,6 @@ class Settings(BaseSettings):
     secret: str = 'SECRET'
 
     class Config:
-        # ссылка на .env файл, откуда будут забираться переменные
-        # работает через вызов uvicorn в терминале
         env_file = '.env'
 
 

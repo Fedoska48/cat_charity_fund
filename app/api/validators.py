@@ -36,13 +36,12 @@ async def check_name_duplicate(
     return project_id
 
 
-# TODO: func
 async def check_new_full_amount_bigger_than_invested_amount(
         project_id: int,
         new_full_amount: int,
         session: AsyncSession
 ):
-    """Проверка того, что новая финальная сумма не ниже уже инвестированной."""
+    """Проверить, что новая финальная сумма не ниже уже инвестированной."""
     invested_amount = await charity_project_crud.get_invested_amount_by_id(
         project_id, session
     )
@@ -54,12 +53,11 @@ async def check_new_full_amount_bigger_than_invested_amount(
     return invested_amount
 
 
-# TODO: func
 async def check_project_already_got_donation(
         project_id: int,
         session: AsyncSession
 ):
-    """Проверка того, что в проект хотя бы что-то инвестировано."""
+    """Проверить, что в проект хотя бы что-то инвестировано."""
     invested_amount = await charity_project_crud.get_invested_amount_by_id(
         project_id, session
     )
@@ -71,12 +69,11 @@ async def check_project_already_got_donation(
     return invested_amount
 
 
-# TODO: func
 async def check_project_is_closed(
         project_id: int,
         session: AsyncSession
 ):
-    """Проверка закрыт ли проект."""
+    """Проверить закрыт ли проект."""
     project_status = await charity_project_crud.get_project_status_by_id(
         project_id, session
     )

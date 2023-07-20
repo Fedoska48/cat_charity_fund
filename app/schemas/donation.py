@@ -22,8 +22,6 @@ class DonationShortDB(DonationBase):
     create_date: datetime
 
     class Config:
-        # для того, чтобы можно было сериализовать объекты ORM,
-        # а не только Python-словарь или JSON
         orm_mode = True
 
 

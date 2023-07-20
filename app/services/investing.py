@@ -23,7 +23,7 @@ async def investing(
         model_for_invest, session
     )
     if not_invested_objects:
-        available = obj_in.fully_invested
+        available = obj_in.full_amount
         for open_object in not_invested_objects:
             needs_amount = (open_object.full_amount -
                             open_object.invested_amount)
@@ -64,6 +64,6 @@ async def get_not_invested_objects(
 async def close_fully_invested_object(
         obj_in: Union[CharityProject, Donation],
 ) -> None:
-    """Закрывает объект инвестирования."""
+    """Закрыть объект инвестирования."""
     obj_in.fully_invested = True
     obj_in.close_date = datetime.now()

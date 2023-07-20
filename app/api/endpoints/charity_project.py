@@ -17,8 +17,6 @@ from app.services.investing import investing
 router = APIRouter()
 
 
-# @TODO add general roles
-
 @router.get(
     '/',
     response_model=List[CharityProjectDB],
@@ -28,7 +26,7 @@ async def get_all_charity_projects(
         session: AsyncSession = Depends(get_async_session)
 ):
     """
-    Доступно для всех. Получает список всех проектов.
+    Доступно для всех. Получить список всех проектов.
     """
     all_charity_projects = await charity_project_crud.get_multi(session)
     return all_charity_projects
@@ -44,7 +42,7 @@ async def create_new_charity_project(
         charity_project: CharityProjectCreate,
         session: AsyncSession = Depends(get_async_session)
 ):
-    """Только для суперюзеров. Создает благотворительный проект."""
+    """Только для суперюзеров. Создать благотворительный проект."""
     await check_name_duplicate(charity_project.name, session)
     new_charity_project = await charity_project_crud.create(
         charity_project,

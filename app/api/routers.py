@@ -1,4 +1,4 @@
-# делаем единую точку входа роутеров
+""" Делает единую точку входа роутеров."""
 from fastapi import APIRouter
 
 from app.api.endpoints import charity_project_router, \
