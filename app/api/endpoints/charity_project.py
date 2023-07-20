@@ -58,7 +58,6 @@ async def create_new_charity_project(
 @router.patch(
     '/{project_id}',
     response_model=CharityProjectDB,
-    response_model_exclude_none=True,
     dependencies=[Depends(current_superuser)]
 )
 async def update_charity_project(
@@ -71,27 +70,27 @@ async def update_charity_project(
     Закрытый проект нельзя редактировать,
     также нельзя установить требуемую сумму меньше уже вложенной.
     """
-    await check_project_exists(project_id, session)
+    db_obj = await check_project_exists(project_id, session)
     await check_project_is_closed(project_id, session)
     if obj_in.name:
         await check_name_duplicate(obj_in.name, session)
-    # @TODO new_full_amount > invested_amount validation
     if obj_in.full_amount:
         await check_new_full_amount_bigger_than_invested_amount(
             project_id, obj_in.full_amount, session
         )
-    charity_project = charity_project_crud.update(
-        project_id,
+    charity_project = await charity_project_crud.update(
+        db_obj,
         obj_in,
         session
     )
+    await investing(charity_project, session)
+    await session.refresh(charity_project)
     return charity_project
 
 
 @router.delete(
     '/{project_id}',
     response_model=CharityProjectDB,
-    response_model_exclude_none=True,
     dependencies=[Depends(current_superuser)]
 )
 async def remove_charity_project(
@@ -107,5 +106,8 @@ async def remove_charity_project(
     await check_project_already_got_donation(
         project_id, session
     )
-    charity_project = charity_project_crud.remove(charity_project, session)
+    charity_project = await charity_project_crud.remove(
+        charity_project,
+        session
+    )
     return charity_project
