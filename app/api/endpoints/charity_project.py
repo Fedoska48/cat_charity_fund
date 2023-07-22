@@ -9,7 +9,6 @@ from app.api.validators import check_project_exists, check_name_duplicate, \
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
-from app.models import User
 from app.schemas.charity_project import CharityProjectDB, CharityProjectCreate, \
     CharityProjectUpdate
 from app.services.investing import investing

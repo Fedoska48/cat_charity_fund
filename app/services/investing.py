@@ -52,8 +52,10 @@ async def get_not_invested_objects(
 ) -> List[Union[CharityProject, Donation]]:
     """Получить объекты, которые еще не полностью проинвестированы."""
     not_invested_objects = await session.execute(
-        select(obj_in).where(
-            obj_in.fully_invested == False
+        select(
+            obj_in
+        ).where(
+            obj_in.fully_invested == False  # noqa
         ).order_by(
             obj_in.create_date
         )
