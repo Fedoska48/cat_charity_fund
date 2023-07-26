@@ -1,5 +1,5 @@
 """Базовые операциии CRUD."""
-from typing import Optional
+from typing import Optional, List
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
@@ -40,7 +40,8 @@ class CRUDBase:
             self,
             obj_in,
             session: AsyncSession,
-            user: Optional[User] = None
+            user: Optional[User] = None,
+            commit: bool = True
     ):
         """Абстрактный метод для создания объекта."""
         new_obj_data = obj_in.dict()
@@ -48,15 +49,17 @@ class CRUDBase:
             new_obj_data['user_id'] = user.id
         db_obj = self.model(**new_obj_data)
         session.add(db_obj)
-        await session.commit()
-        await session.refresh(db_obj)
+        if commit:
+            await session.commit()
+            await session.refresh(db_obj)
         return db_obj
 
     async def update(
             self,
             db_obj,
             obj_in,
-            session: AsyncSession
+            session: AsyncSession,
+            commit: bool = True
     ):
         """Абстрактный метод обновления данных."""
         obj_data = jsonable_encoder(db_obj)
@@ -65,8 +68,9 @@ class CRUDBase:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
         session.add(db_obj)
-        await session.commit()
-        await session.refresh(db_obj)
+        if commit:
+            await session.commit()
+            await session.refresh(db_obj)
         return db_obj
 
     async def remove(
@@ -78,3 +82,50 @@ class CRUDBase:
         await session.delete(db_obj)
         await session.commit()
         return db_obj
+
+    async def get_not_invested(
+        self,
+        session: AsyncSession,
+    ):
+        """
+        Получить не проинвестированные объекты с сортировкой по дате создания.
+        """
+        not_invested_objects = await session.execute(
+            select(
+                self.model
+            ).where(
+                self.model.fully_invested == False  # noqa
+            ).order_by(
+                self.model.create_date
+            )
+        )
+        return not_invested_objects.scalars().all()
+
+    async def get_status_by_id(
+            self,
+            object_id: int,
+            session: AsyncSession
+    ) -> None:
+        """Получить статус объекта по ID."""
+        db_object_status = await session.execute(
+            select(
+                self.model.fully_invested
+            ).where(
+                self.model.id == object_id
+            )
+        )
+        return db_object_status.scalars().first()
+
+    async def get_invested_amount_by_id(
+            self,
+            object_id: int,
+            session: AsyncSession
+    ):
+        invested_amount = await session.execute(
+            select(
+                self.model.invested_amount
+            ).where(
+                self.model.id == object_id
+            )
+        )
+        return invested_amount.scalars().first()

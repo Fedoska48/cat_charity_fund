@@ -82,7 +82,7 @@ async def check_project_is_closed(
         session: AsyncSession
 ):
     """Проверить закрыт ли проект."""
-    project_status = await charity_project_crud.get_project_status_by_id(
+    project_status = await charity_project_crud.get_status_by_id(
         project_id, session
     )
     if project_status:

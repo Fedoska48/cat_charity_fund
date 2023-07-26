@@ -9,6 +9,7 @@ from app.api.validators import check_project_exists, check_name_duplicate, \
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
+from app.crud.donation import donation_crud
 from app.schemas.charity_project import CharityProjectDB, CharityProjectCreate, \
     CharityProjectUpdate
 from app.services.investing import investing
@@ -45,9 +46,12 @@ async def create_new_charity_project(
     await check_name_duplicate(charity_project.name, session)
     new_charity_project = await charity_project_crud.create(
         charity_project,
-        session
+        session,
+        commit=False
     )
-    await investing(new_charity_project, session)
+    not_invested_objects = await donation_crud.get_not_invested(session)
+    session.add_all(investing(new_charity_project, not_invested_objects))
+    await session.commit()
     await session.refresh(new_charity_project)
     return new_charity_project
 
@@ -78,9 +82,12 @@ async def update_charity_project(
     charity_project = await charity_project_crud.update(
         db_obj,
         obj_in,
-        session
+        session,
+        commit=False
     )
-    await investing(charity_project, session)
+    not_invested_objects = await donation_crud.get_not_invested(session)
+    session.add_all(investing(charity_project, not_invested_objects))
+    await session.commit()
     await session.refresh(charity_project)
     return charity_project
 

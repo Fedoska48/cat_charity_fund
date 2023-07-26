@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from sqlalchemy import Column, Integer, Boolean, DateTime
+from sqlalchemy import Column, Integer
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import declarative_base, sessionmaker, declared_attr
 
@@ -19,16 +17,6 @@ class PreBase:
 
 
 Base = declarative_base(cls=PreBase)
-
-
-class BaseDonationCharityProject(Base):
-    __abstract__ = True
-    full_amount = Column(Integer)
-    invested_amount = Column(Integer, default=0)
-    fully_invested = Column(Boolean, default=False)
-    create_date = Column(DateTime, default=datetime.now)
-    close_date = Column(DateTime)
-
 
 engine = create_async_engine(settings.database_url)
 

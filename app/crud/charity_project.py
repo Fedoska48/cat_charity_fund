@@ -25,34 +25,5 @@ class CRUDCharityProject(CRUDBase):
         db_project_id = db_project_id.scalars().first()
         return db_project_id
 
-    @staticmethod
-    async def get_project_status_by_id(
-            project_id: int,
-            session: AsyncSession
-    ) -> None:
-        """Получить статус проект по ID."""
-        db_project_status = await session.execute(
-            select(
-                CharityProject.fully_invested
-            ).where(
-                CharityProject.id == project_id
-            )
-        )
-        return db_project_status.scalars().first()
-
-    @staticmethod
-    async def get_invested_amount_by_id(
-            project_id: int,
-            session: AsyncSession
-    ):
-        invested_amount = await session.execute(
-            select(
-                CharityProject.invested_amount
-            ).where(
-                CharityProject.id == project_id
-            )
-        )
-        return invested_amount.scalars().first()
-
 
 charity_project_crud = CRUDCharityProject(CharityProject)
