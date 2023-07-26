@@ -1,5 +1,5 @@
 """Базовые операциии CRUD."""
-from typing import Optional, List
+from typing import Optional
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
