@@ -49,8 +49,12 @@ async def create_new_charity_project(
         session,
         commit=False
     )
-    not_invested_objects = await donation_crud.get_not_invested(session)
-    session.add_all(investing(new_charity_project, not_invested_objects))
+    session.add_all(
+        investing(
+            new_charity_project,
+            await donation_crud.get_not_invested(session)
+        )
+    )
     await session.commit()
     await session.refresh(new_charity_project)
     return new_charity_project
@@ -85,8 +89,12 @@ async def update_charity_project(
         session,
         commit=False
     )
-    not_invested_objects = await donation_crud.get_not_invested(session)
-    session.add_all(investing(charity_project, not_invested_objects))
+    session.add_all(
+        investing(
+            charity_project,
+            await donation_crud.get_not_invested(session)
+        )
+    )
     await session.commit()
     await session.refresh(charity_project)
     return charity_project

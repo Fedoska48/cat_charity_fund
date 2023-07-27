@@ -13,7 +13,7 @@ def investing(
     Увеличение invested_amount, как в проектах, так и в пожертвованиях.
     Установка значений fully_invested и close_date, при необходимости.
     """
-    objects_get_investment = []
+    changed = []
     if target.invested_amount is None:
         target.invested_amount = 0
     for source in sources:
@@ -21,7 +21,7 @@ def investing(
             source.full_amount - source.invested_amount,
             target.full_amount - target.invested_amount
         )
-        objects_get_investment.append(source)
+        changed.append(source)
         for investment in [target, source]:
             investment.invested_amount += available_for_invest
             if investment.invested_amount == investment.full_amount:
@@ -29,4 +29,4 @@ def investing(
                 investment.close_date = datetime.utcnow()
         if target.fully_invested:
             break
-    return objects_get_investment
+    return changed

@@ -2,6 +2,8 @@
 
 Проект приложения для Благотворительного фонда поддержки котиков QRKot.
 
+Репозиторий проекта: [GitHub](git@github.com:Fedoska48/cat_charity_fund.git)
+
 ### Технологический стек
 
 Python 3.9
@@ -22,9 +24,7 @@ Pydantic 1.9.1
 
 Telegram: [@nsfed](https://t.me/nsfed)
 
-Репозиторий: [GitHub](git@github.com:Fedoska48/cat_charity_fund.git)
-
-Клонировать репозиторий и перейти в него в командной строке:
+Клонировать репозиторий и перейти в раздел **_cat_charity_fund_**:
 
 ```
 git clone git@github.com:Fedoska48/cat_charity_fund.git
@@ -68,19 +68,13 @@ APP_TITLE=QRKot
 
 APP_DESCRIPTION=Кошачий благотворительный фонд
 
-DATABASE_URL=sqlite+aiosqlite:///./qrkot.db
+DATABASE_URL=sqlite+aiosqlite:///./cat_charity_fund.db
 
 SECRET=Secret
 
 FIRST_SUPERUSER_EMAIL=superuser@superuser.com
 
 FIRST_SUPERUSER_PASSWORD=superuser
-
-* Создать файл миграций:
-
-```
-alembic revision --autogenerate -m "Init migration"
-```
 
 * Выполнить миграции:
 
@@ -98,7 +92,7 @@ FIRST_SUPERUSER_EMAIL, FIRST_SUPERUSER_PASSWORD из .env - файла
 
 ### Описание API:
 
-**/redoc** — документация в формате **ReDoc**;
+**http://127.0.0.1:8000/redoc** — документация в формате **ReDoc**;
 
 
-**/docs** — документация в формате **Swagger**
+**http://127.0.0.1:8000/docs** — документация в формате **Swagger**
